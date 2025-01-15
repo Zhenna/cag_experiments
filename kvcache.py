@@ -45,7 +45,7 @@ def generate(
     embed_device = model.model.embed_tokens.weight.device
 
     origin_ids = input_ids
-    input_ids = input_ids.to(embed_device)
+    input_ids = input_ids #.to(embed_device)
 
     output_ids = input_ids.clone()
     next_token = input_ids
@@ -59,7 +59,7 @@ def generate(
             )
             next_token_logits = outputs.logits[:, -1, :]
             next_token = next_token_logits.argmax(dim=-1).unsqueeze(-1)
-            next_token = next_token.to(embed_device)
+            next_token = next_token #.to(embed_device)
 
             past_key_values = outputs.past_key_values
 
@@ -92,7 +92,7 @@ def preprocess_knowledge(
         DynamicCache: KV Cache
     """
     embed_device = model.model.embed_tokens.weight.device
-    input_ids = tokenizer.encode(prompt, return_tensors="pt").to(embed_device)
+    input_ids = tokenizer.encode(prompt, return_tensors="pt") #.to(embed_device)
     past_key_values = DynamicCache()
     with torch.no_grad():
         outputs = model(
@@ -109,6 +109,9 @@ def write_kv_cache(kv: DynamicCache, path: str):
     """
     Write the KV Cache to a file.
     """
+    # debugging
+    print("path:\n", path)
+    print("kv:\n", kv)
     torch.save(kv, path)
 
 
