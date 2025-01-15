@@ -308,8 +308,8 @@ def kvcache_test(args: argparse.Namespace):
     max_questions = min(len(dataset), args.maxQuestion) if args.maxQuestion is not None else len(dataset)
     # Retrieve the knowledge from the vector database
     for id, (question, ground_truth) in enumerate(dataset[:max_questions]):
-        torch.cuda.empty_cache()
-        torch.cuda.ipc_collect()
+        # torch.cuda.empty_cache() # no gpu
+        # torch.cuda.ipc_collect() # no gpu
 
         # Read the knowledge cache from the cache file
         cache_t1 = time()
