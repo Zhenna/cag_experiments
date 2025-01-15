@@ -50,6 +50,8 @@ def generate(
     output_ids = input_ids.clone()
     next_token = input_ids
 
+    print("debugging next_token: ", type(next_token))
+
     with torch.no_grad():
         for _ in range(max_new_tokens):
             outputs = model(
@@ -110,8 +112,8 @@ def write_kv_cache(kv: DynamicCache, path: str):
     Write the KV Cache to a file.
     """
     # debugging
-    print("path:\n", path)
-    print("kv:\n", kv)
+    # print("path:\n", path)
+    # print("kv:\n", kv)
     torch.save(kv, path)
 
 
