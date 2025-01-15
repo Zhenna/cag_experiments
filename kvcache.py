@@ -50,7 +50,6 @@ def generate(
     output_ids = input_ids.clone()
     next_token = input_ids
 
-    print("debugging next_token: ", type(next_token))
 
     with torch.no_grad():
         for _ in range(max_new_tokens):
@@ -62,6 +61,9 @@ def generate(
             next_token_logits = outputs.logits[:, -1, :]
             next_token = next_token_logits.argmax(dim=-1).unsqueeze(-1)
             next_token = next_token #.to(embed_device)
+
+            print("debugging next_token: ", type(next_token))
+            print("shape(next_token): ", shape(next_token))
 
             past_key_values = outputs.past_key_values
 
