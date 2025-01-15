@@ -308,8 +308,8 @@ def kvcache_test(args: argparse.Namespace):
     max_questions = min(len(dataset), args.maxQuestion) if args.maxQuestion is not None else len(dataset)
     # Retrieve the knowledge from the vector database
     for id, (question, ground_truth) in enumerate(dataset[:max_questions]):
-        torch.cuda.empty_cache() # no gpu
-        torch.cuda.ipc_collect() # no gpu
+        # torch.cuda.empty_cache() # no gpu
+        # torch.cuda.ipc_collect() # no gpu
 
         # Read the knowledge cache from the cache file
         cache_t1 = time()
@@ -340,7 +340,7 @@ def kvcache_test(args: argparse.Namespace):
     <|start_header_id|>assistant<|end_header_id|>
     """
             generate_t1 = time()
-            input_ids = tokenizer.encode(prompt, return_tensors="pt").to(model.device)
+            input_ids = tokenizer.encode(prompt, return_tensors="pt") #.to(model.device)
             output = generate(model, input_ids, DynamicCache()) 
             generated_text = tokenizer.decode(output[0], skip_special_tokens=True, temperature=None)
             generate_t2 = time()
@@ -351,7 +351,7 @@ def kvcache_test(args: argparse.Namespace):
     """
             generate_t1 = time()
             clean_up(knowledge_cache, kv_len)
-            input_ids = tokenizer.encode(prompt, return_tensors="pt").to(model.device)
+            input_ids = tokenizer.encode(prompt, return_tensors="pt") #.to(model.device)
             output = generate(model, input_ids, knowledge_cache)
             generated_text = tokenizer.decode(output[0], skip_special_tokens=True, temperature=None)
             generate_t2 = time()
