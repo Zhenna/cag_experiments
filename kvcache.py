@@ -63,7 +63,7 @@ def generate(
             next_token = next_token #.to(embed_device)
 
             print("debugging next_token: ", type(next_token))
-            print("shape(next_token): ", shape(next_token))
+            print("print(next_token): ", print(next_token))
 
             past_key_values = outputs.past_key_values
 
