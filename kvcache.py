@@ -456,22 +456,39 @@ if __name__ == "__main__":
     if args.quantized:
         tokenizer, model = load_quantized_model(model_name=model_name, hf_token=HF_TOKEN)
     else:
+
+        # ==================
+        # https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B
+
+        from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
+        import bitsandbytes, flash_attn
+
+        tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
+        model = LlamaForCausalLM.from_pretrained(
+            "NousResearch/Hermes-3-Llama-3.1-8B",
+            torch_dtype=torch.float16,
+            device_map="auto",
+            load_in_8bit=False,
+            load_in_4bit=True,
+            use_flash_attention_2=True
+        )
+
         # ==================
         # https://huggingface.co/unsloth/Llama-3.2-1B
-        from transformers import AutoTokenizer, AutoModelForCausalLM
+        # from transformers import AutoTokenizer, AutoModelForCausalLM
 
         # tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
         # model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
         # ==================
 
-        tokenizer = AutoTokenizer.from_pretrained(model_name, token=HF_TOKEN)
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype=torch.float16,
-            device_map="auto",
-            token=HF_TOKEN,
-            # low_cpu_mem_usage=True, offload_folder="offload",  #max_memory={0: "15GB"} # test
-        )
+        # tokenizer = AutoTokenizer.from_pretrained(model_name, token=HF_TOKEN)
+        # model = AutoModelForCausalLM.from_pretrained(
+        #     model_name,
+        #     torch_dtype=torch.float16,
+        #     device_map="auto",
+        #     token=HF_TOKEN,
+        #     # low_cpu_mem_usage=True, offload_folder="offload",  #max_memory={0: "15GB"} # test
+        # )
 
     def unique_path(path, i=0):
         if os.path.exists(path):
