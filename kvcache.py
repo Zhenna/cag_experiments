@@ -50,6 +50,8 @@ def generate(
     output_ids = input_ids.clone()
     next_token = input_ids
 
+    #  debugging print(input_ids) figure out when the erro
+
     with torch.no_grad():
         for _ in range(max_new_tokens):
             outputs = model(
@@ -410,7 +412,6 @@ def load_quantized_model(model_name, hf_token=None):
     tokenizer = AutoTokenizer.from_pretrained(
         model_name,
         token=hf_token,
-        # low_cpu_mem_usage=True, offload_folder="offload",  #max_memory={0: "15GB"} # test
     )
 
     # Load model with quantization
@@ -420,7 +421,6 @@ def load_quantized_model(model_name, hf_token=None):
         device_map="auto",          # Automatically choose best device
         trust_remote_code=True,     # Required for some models
         token=hf_token,
-        # low_cpu_mem_usage=True, offload_folder="offload",  #max_memory={0: "15GB"} # test 
     )
 
     return tokenizer, model
@@ -459,7 +459,7 @@ if __name__ == "__main__":
 
         # ==================
 
-        # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit
+        # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit (skip)
 
         from transformers import AutoTokenizer, AutoModelForCausalLM
 
