@@ -461,10 +461,10 @@ if __name__ == "__main__":
 
         # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit (skip)
 
-        from transformers import AutoTokenizer, AutoModelForCausalLM
+        # from transformers import AutoTokenizer, AutoModelForCausalLM
 
-        tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
-        model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+        # tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+        # model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
 
         # ==================
         # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G)
@@ -477,18 +477,18 @@ if __name__ == "__main__":
         # ==================
         # https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B ()
 
-        # from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
-        # import bitsandbytes, flash_attn
+        from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
+        import bitsandbytes, flash_attn
 
-        # tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
-        # model = LlamaForCausalLM.from_pretrained(
-        #     "NousResearch/Hermes-3-Llama-3.1-8B",
-        #     torch_dtype=torch.float16,
-        #     device_map="auto",
-        #     load_in_8bit=False,
-        #     load_in_4bit=True,
-        #     use_flash_attention_2=True
-        # )
+        tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
+        model = LlamaForCausalLM.from_pretrained(
+            "NousResearch/Hermes-3-Llama-3.1-8B",
+            torch_dtype=torch.float16,
+            device_map="auto",
+            load_in_8bit=False,
+            load_in_4bit=True,
+            use_flash_attention_2=True
+        )
 
         # ==================
         # https://huggingface.co/unsloth/Llama-3.2-1B (<3G)
