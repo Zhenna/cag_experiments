@@ -430,8 +430,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run RAG test with specified parameters.")
     # parser.add_argument('--method', choices=['rag', 'kvcache'], required=True, help='Method to use (rag or kvcache)')
     # parser.add_argument('--kvcache', choices=['file', 'variable'], required=True, help='Method to use (from_file or from_var)')
-    parser.add_argument('--modelname', required=False, default="meta-llama/Llama-3.2-1B-Instruct", type=str, help='Model name to use')
-    parser.add_argument('--quantized', required=False, default=False, type=bool, help='Quantized model')
+    # parser.add_argument('--modelname', required=False, default="meta-llama/Llama-3.2-1B-Instruct", type=str, help='Model name to use')
+    # parser.add_argument('--quantized', required=False, default=False, type=bool, help='Quantized model')
     parser.add_argument('--kvcache', choices=['file'], required=True, help='Method to use (from_file or from_var)')
     parser.add_argument('--similarity', choices=['bertscore'], required=True, help='Similarity metric to use (bertscore)')
     parser.add_argument('--output', required=True, type=str, help='Output file to save the results')
@@ -453,9 +453,38 @@ if __name__ == "__main__":
     model_name = args.modelname
     rand_seed = args.randomSeed if args.randomSeed is not None else None
 
-    if args.quantized:
-        tokenizer, model = load_quantized_model(model_name=model_name, hf_token=HF_TOKEN)
-    else:
+
+    # ==================
+    # https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B (~5G)
+
+    from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
+    import bitsandbytes, flash_attn
+
+
+    tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
+    # original code snippet below has to be changed
+    model = LlamaForCausalLM.from_pretrained(
+        "NousResearch/Hermes-3-Llama-3.1-8B",
+        torch_dtype=torch.float16,
+        device_map="auto",
+        load_in_8bit=False,
+        load_in_4bit=True,
+        use_flash_attention_2=True
+    )
+    # load model with quantization
+    model = LlamaForCausalLM.from_pretrained(
+        "NousResearch/Hermes-3-Llama-3.1-8B",
+        quantization_config=bnb_config,
+        # torch_dtype=torch.float16,
+        device_map="auto",
+        # load_in_8bit=False,
+        # load_in_4bit=True,
+        # use_flash_attention_2=True
+    )
+
+    # if args.quantized:
+    #     tokenizer, model = load_quantized_model(model_name=model_name, hf_token=HF_TOKEN)
+    # else:
 
         # ==================
 
@@ -474,21 +503,8 @@ if __name__ == "__main__":
         # tokenizer = AutoTokenizer.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
         # model = AutoModelForCausalLM.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
 
-        # ==================
-        # https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B ()
 
-        from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
-        import bitsandbytes, flash_attn
 
-        tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
-        model = LlamaForCausalLM.from_pretrained(
-            "NousResearch/Hermes-3-Llama-3.1-8B",
-            torch_dtype=torch.float16,
-            device_map="auto",
-            load_in_8bit=False,
-            load_in_4bit=True,
-            use_flash_attention_2=True
-        )
 
         # ==================
         # https://huggingface.co/unsloth/Llama-3.2-1B (<3G)
@@ -504,7 +520,6 @@ if __name__ == "__main__":
         #     torch_dtype=torch.float16,
         #     device_map="auto",
         #     token=HF_TOKEN,
-        #     # low_cpu_mem_usage=True, offload_folder="offload",  #max_memory={0: "15GB"} # test
         # )
 
     def unique_path(path, i=0):
