@@ -482,13 +482,23 @@ if __name__ == "__main__":
     #     # use_flash_attention_2=True
     # )
 
+    # # ==================
+    # # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit (skip)
+
+    # from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    # tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+    # model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+
     # ==================
-    # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit (skip)
+    # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G)
 
     from transformers import AutoTokenizer, AutoModelForCausalLM
 
-    tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
-    model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+    tokenizer = AutoTokenizer.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
+    model = AutoModelForCausalLM.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
+
+
 
 
     # if args.quantized:
@@ -496,14 +506,6 @@ if __name__ == "__main__":
     # else:
 
         
-
-        # ==================
-        # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G)
-
-        # from transformers import AutoTokenizer, AutoModelForCausalLM
-
-        # tokenizer = AutoTokenizer.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
-        # model = AutoModelForCausalLM.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
 
 
 
