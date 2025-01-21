@@ -463,14 +463,14 @@ if __name__ == "__main__":
 
     tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
     # original code snippet below has to be changed
-    model = LlamaForCausalLM.from_pretrained(
-        "NousResearch/Hermes-3-Llama-3.1-8B",
-        torch_dtype=torch.float16,
-        device_map="auto",
-        load_in_8bit=False,
-        load_in_4bit=True,
-        use_flash_attention_2=True
-    )
+    # model = LlamaForCausalLM.from_pretrained(
+    #     "NousResearch/Hermes-3-Llama-3.1-8B",
+    #     torch_dtype=torch.float16,
+    #     device_map="auto",
+    #     load_in_8bit=False,
+    #     load_in_4bit=True,
+    #     use_flash_attention_2=True
+    # )
     # load model with quantization
     model = LlamaForCausalLM.from_pretrained(
         "NousResearch/Hermes-3-Llama-3.1-8B",
