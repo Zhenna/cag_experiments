@@ -454,46 +454,48 @@ if __name__ == "__main__":
     rand_seed = args.randomSeed if args.randomSeed is not None else None
 
 
-    # ==================
-    # https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B (~5G)
+    # # ==================
+    # # https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B (~5G)
 
-    from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
-    import bitsandbytes, flash_attn
+    # from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
+    # import bitsandbytes, flash_attn
 
 
-    tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
-    # original code snippet below has to be changed
+    # tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
+    # # original code snippet below has to be changed
+    # # model = LlamaForCausalLM.from_pretrained(
+    # #     "NousResearch/Hermes-3-Llama-3.1-8B",
+    # #     torch_dtype=torch.float16,
+    # #     device_map="auto",
+    # #     load_in_8bit=False,
+    # #     load_in_4bit=True,
+    # #     use_flash_attention_2=True
+    # # )
+    # # load model with quantization
     # model = LlamaForCausalLM.from_pretrained(
     #     "NousResearch/Hermes-3-Llama-3.1-8B",
-    #     torch_dtype=torch.float16,
+    #     quantization_config=bnb_config,
+    #     # torch_dtype=torch.float16,
     #     device_map="auto",
-    #     load_in_8bit=False,
-    #     load_in_4bit=True,
-    #     use_flash_attention_2=True
+    #     # load_in_8bit=False,
+    #     # load_in_4bit=True,
+    #     # use_flash_attention_2=True
     # )
-    # load model with quantization
-    model = LlamaForCausalLM.from_pretrained(
-        "NousResearch/Hermes-3-Llama-3.1-8B",
-        quantization_config=bnb_config,
-        # torch_dtype=torch.float16,
-        device_map="auto",
-        # load_in_8bit=False,
-        # load_in_4bit=True,
-        # use_flash_attention_2=True
-    )
+
+    # ==================
+    # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit (skip)
+
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+    model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+
 
     # if args.quantized:
     #     tokenizer, model = load_quantized_model(model_name=model_name, hf_token=HF_TOKEN)
     # else:
 
-        # ==================
-
-        # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit (skip)
-
-        # from transformers import AutoTokenizer, AutoModelForCausalLM
-
-        # tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
-        # model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+        
 
         # ==================
         # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G)
