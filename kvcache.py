@@ -483,48 +483,40 @@ if __name__ == "__main__":
     # )
 
     # # ==================
-    # # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit (skip)
+    # # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit 
 
     # from transformers import AutoTokenizer, AutoModelForCausalLM
 
     # tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
     # model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
 
-    # ==================
-    # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G)
+    # # ==================
+    # # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G) TOO SLOW!!!
 
+    # from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    # tokenizer = AutoTokenizer.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
+    # model = AutoModelForCausalLM.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
+
+    # ==================
+    # https://huggingface.co/unsloth/Llama-3.2-1B (<3G)
     from transformers import AutoTokenizer, AutoModelForCausalLM
 
-    tokenizer = AutoTokenizer.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
-    model = AutoModelForCausalLM.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
-
-
+    tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
+    model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
+    # ==================
 
 
     # if args.quantized:
     #     tokenizer, model = load_quantized_model(model_name=model_name, hf_token=HF_TOKEN)
     # else:
-
-        
-
-
-
-
-        # ==================
-        # https://huggingface.co/unsloth/Llama-3.2-1B (<3G)
-        # from transformers import AutoTokenizer, AutoModelForCausalLM
-
-        # tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
-        # model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
-        # ==================
-
-        # tokenizer = AutoTokenizer.from_pretrained(model_name, token=HF_TOKEN)
-        # model = AutoModelForCausalLM.from_pretrained(
-        #     model_name,
-        #     torch_dtype=torch.float16,
-        #     device_map="auto",
-        #     token=HF_TOKEN,
-        # )
+    #     tokenizer = AutoTokenizer.from_pretrained(model_name, token=HF_TOKEN)
+    #     model = AutoModelForCausalLM.from_pretrained(
+    #         model_name,
+    #         torch_dtype=torch.float16,
+    #         device_map="auto",
+    #         token=HF_TOKEN,
+    #     )
 
     def unique_path(path, i=0):
         if os.path.exists(path):
