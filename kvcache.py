@@ -45,27 +45,26 @@ def generate(
     embed_device = model.model.embed_tokens.weight.device
 
     print("input_ids: ", input_ids) # debugging
-
     origin_ids = input_ids
     input_ids = input_ids.to(embed_device)
 
     output_ids = input_ids.clone()
     next_token = input_ids
-
-    print("next_token outside for loop: ", next_token)
+    print("next_token outside for loop: ", next_token) # debugging
 
     with torch.no_grad():
         for _ in range(max_new_tokens):
+            print("next_token before model: ", next_token) # debugging
             outputs = model(
                 input_ids=next_token, 
                 past_key_values=past_key_values,
                 use_cache=True
             )
+            print("next_token after model: ", next_token) # debugging
             next_token_logits = outputs.logits[:, -1, :]
             next_token = next_token_logits.argmax(dim=-1).unsqueeze(-1)
             next_token = next_token.to(embed_device)
-
-            print("next_token inside for loop: ", next_token)
+            # print("next_token inside for loop: ", next_token) # debugging
 
             past_key_values = outputs.past_key_values
 
