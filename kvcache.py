@@ -488,10 +488,10 @@ if __name__ == "__main__":
     # # ==================
     # # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit 
 
-    from transformers import AutoTokenizer, AutoModelForCausalLM
+    # from transformers import AutoTokenizer, AutoModelForCausalLM
 
-    tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
-    model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+    # tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+    # model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
 
     # # ==================
     # # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G) TOO SLOW!!!
@@ -504,10 +504,10 @@ if __name__ == "__main__":
     # ==================
     # https://huggingface.co/unsloth/Llama-3.2-1B (<3G)
 
-    # from transformers import AutoTokenizer, AutoModelForCausalLM
+    from transformers import AutoTokenizer, AutoModelForCausalLM
 
-    # tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
-    # model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
+    tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
+    model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
     # ==================
 
     # if args.quantized:
