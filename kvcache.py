@@ -54,7 +54,7 @@ def generate(
 
     with torch.no_grad():
         for _ in range(max_new_tokens):
-            print("next_token before model: ", next_token) # debugging
+            # print("next_token before model: ", next_token) # debugging
             outputs = model(
                 input_ids=next_token, 
                 past_key_values=past_key_values,
@@ -64,8 +64,9 @@ def generate(
             next_token_logits = outputs.logits[:, -1, :]
             print("next_token_logits: ", next_token_logits) # debugging
             next_token = next_token_logits.argmax(dim=-1).unsqueeze(-1)
+            print("next_token before to(): ", next_token) # debugging
             next_token = next_token.to(embed_device)
-            print("next_token inside for loop: ", next_token) # debugging
+            # print("next_token inside for loop: ", next_token) # debugging
 
             past_key_values = outputs.past_key_values
 
