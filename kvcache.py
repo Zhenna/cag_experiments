@@ -44,13 +44,15 @@ def generate(
 
     embed_device = model.model.embed_tokens.weight.device
 
+    print("print(input_ids): ", print(input_ids)) # debugging
+
     origin_ids = input_ids
     input_ids = input_ids.to(embed_device)
 
     output_ids = input_ids.clone()
     next_token = input_ids
 
-    #  debugging print(input_ids) figure out when the erro
+    print("print(next_token) outside for loop: ", print(next_token))
 
     with torch.no_grad():
         for _ in range(max_new_tokens):
@@ -62,6 +64,8 @@ def generate(
             next_token_logits = outputs.logits[:, -1, :]
             next_token = next_token_logits.argmax(dim=-1).unsqueeze(-1)
             next_token = next_token.to(embed_device)
+
+            print("print(next_token) inside for loop: ", print(next_token))
 
             past_key_values = outputs.past_key_values
 
@@ -460,7 +464,6 @@ if __name__ == "__main__":
     # from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
     # import bitsandbytes, flash_attn
 
-
     # tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
     # # original code snippet below has to be changed
     # # model = LlamaForCausalLM.from_pretrained(
@@ -485,10 +488,10 @@ if __name__ == "__main__":
     # # ==================
     # # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit 
 
-    # from transformers import AutoTokenizer, AutoModelForCausalLM
+    from transformers import AutoTokenizer, AutoModelForCausalLM
 
-    # tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
-    # model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+    tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+    model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
 
     # # ==================
     # # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G) TOO SLOW!!!
@@ -500,12 +503,12 @@ if __name__ == "__main__":
 
     # ==================
     # https://huggingface.co/unsloth/Llama-3.2-1B (<3G)
-    from transformers import AutoTokenizer, AutoModelForCausalLM
 
-    tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
-    model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
+    # from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    # tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
+    # model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
     # ==================
-
 
     # if args.quantized:
     #     tokenizer, model = load_quantized_model(model_name=model_name, hf_token=HF_TOKEN)
