@@ -1,0 +1,36 @@
+# Use the official Python base image
+FROM python:3.11-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the rest of the application code to the container
+COPY . /app
+
+# Install the dependencies
+RUN apt -y update
+RUN apt -y upgrade
+# RUN apt -y install software-properties-common
+# RUN apt-get install python3-launchpadlib -y
+# RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test
+# RUN apt-get install ffmpeg libsm6 libxext6 git  -y
+# RUN apt-get -y upgrade
+# RUN apt -y install gcc-11 g++-11
+# RUN apt-get -y install build-essential
+# RUN python3 -m pip install --no-cache-dir --upgrade -r req_main.txt
+
+RUN git clone https://github.com/ultralytics/yolov5.git
+
+# Expose the port that Uvicorn will run on
+EXPOSE 8080
+
+# Set environment variables for the Uvicorn command
+ENV HOST=0.0.0.0
+ENV PORT=8080
+
+WORKDIR /app
+
+# RUN chmod +x deployment-service
+
+# Set the command to run the application
+CMD ["sh", "-c", "uvicorn app.main:app --host $HOST --port $PORT"  ]
