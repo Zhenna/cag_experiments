@@ -44,6 +44,7 @@ def generate(
 
     embed_device = model.model.embed_tokens.weight.device
 
+    # print("input_ids: ", input_ids) # debugging
     origin_ids = input_ids
     input_ids = input_ids #.to(embed_device)
 
@@ -53,12 +54,15 @@ def generate(
 
     with torch.no_grad():
         for _ in range(max_new_tokens):
+            # print("next_token before model: ", next_token) # debugging
             outputs = model(
                 input_ids=next_token, 
                 past_key_values=past_key_values,
                 use_cache=True
             )
+            print("outputs after model: ", outputs) # debugging
             next_token_logits = outputs.logits[:, -1, :]
+            print("next_token_logits: ", next_token_logits) # debugging
             next_token = next_token_logits.argmax(dim=-1).unsqueeze(-1)
             next_token = next_token #.to(embed_device)
 
@@ -417,7 +421,6 @@ def load_quantized_model(model_name, hf_token=None):
     tokenizer = AutoTokenizer.from_pretrained(
         model_name,
         token=hf_token,
-        # low_cpu_mem_usage=True, offload_folder="offload",  #max_memory={0: "15GB"} # test
     )
 
     # Load model with quantization
@@ -427,7 +430,6 @@ def load_quantized_model(model_name, hf_token=None):
         device_map="auto",          # Automatically choose best device
         trust_remote_code=True,     # Required for some models
         token=hf_token,
-        # low_cpu_mem_usage=True, offload_folder="offload",  #max_memory={0: "15GB"} # test 
     )
 
     return tokenizer, model
@@ -438,7 +440,7 @@ if __name__ == "__main__":
     # parser.add_argument('--method', choices=['rag', 'kvcache'], required=True, help='Method to use (rag or kvcache)')
     # parser.add_argument('--kvcache', choices=['file', 'variable'], required=True, help='Method to use (from_file or from_var)')
     parser.add_argument('--modelname', required=False, default="meta-llama/Llama-3.2-1B-Instruct", type=str, help='Model name to use')
-    parser.add_argument('--quantized', required=False, default=False, type=bool, help='Quantized model')
+    # parser.add_argument('--quantized', required=False, default=False, type=bool, help='Quantized model')
     parser.add_argument('--kvcache', choices=['file'], required=True, help='Method to use (from_file or from_var)')
     parser.add_argument('--similarity', choices=['bertscore'], required=True, help='Similarity metric to use (bertscore)')
     parser.add_argument('--output', required=True, type=str, help='Output file to save the results')
@@ -460,25 +462,69 @@ if __name__ == "__main__":
     model_name = args.modelname
     rand_seed = args.randomSeed if args.randomSeed is not None else None
 
-    if args.quantized:
-        tokenizer, model = load_quantized_model(model_name=model_name, hf_token=HF_TOKEN)
-    else:
-        # ==================
-        # https://huggingface.co/unsloth/Llama-3.2-1B
-        from transformers import AutoTokenizer, AutoModelForCausalLM
 
-        tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
-        model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
-        # ==================
+    # # ==================
+    # # https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B (~5G)
 
-        # tokenizer = AutoTokenizer.from_pretrained(model_name, token=HF_TOKEN)
-        # model = AutoModelForCausalLM.from_pretrained(
-        #     model_name,
-        #     torch_dtype=torch.float16,
-        #     device_map="auto",
-        #     token=HF_TOKEN,
-        #     # low_cpu_mem_usage=True, offload_folder="offload",  #max_memory={0: "15GB"} # test
-        # )
+    # from transformers import AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM
+    # import bitsandbytes, flash_attn
+
+    # tokenizer = AutoTokenizer.from_pretrained('NousResearch/Hermes-3-Llama-3.1-8B', trust_remote_code=True)
+    # # original code snippet below has to be changed
+    # # model = LlamaForCausalLM.from_pretrained(
+    # #     "NousResearch/Hermes-3-Llama-3.1-8B",
+    # #     torch_dtype=torch.float16,
+    # #     device_map="auto",
+    # #     load_in_8bit=False,
+    # #     load_in_4bit=True,
+    # #     use_flash_attention_2=True
+    # # )
+    # # load model with quantization
+    # model = LlamaForCausalLM.from_pretrained(
+    #     "NousResearch/Hermes-3-Llama-3.1-8B",
+    #     quantization_config=bnb_config,
+    #     # torch_dtype=torch.float16,
+    #     device_map="auto",
+    #     # load_in_8bit=False,
+    #     # load_in_4bit=True,
+    #     # use_flash_attention_2=True
+    # )
+
+    # # ==================
+    # # https://huggingface.co/unsloth/Meta-Llama-3.1-8B-bnb-4bit 
+
+    # from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    # tokenizer = AutoTokenizer.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+    # model = AutoModelForCausalLM.from_pretrained("unsloth/Meta-Llama-3.1-8B-bnb-4bit")
+
+    # # ==================
+    # # https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (~5G) TOO SLOW!!!
+
+    # from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    # tokenizer = AutoTokenizer.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
+    # model = AutoModelForCausalLM.from_pretrained("nvidia/Llama-3.1-Nemotron-70B-Instruct-HF")
+
+    # ==================
+    # https://huggingface.co/unsloth/Llama-3.2-1B (<3G)
+
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    tokenizer = AutoTokenizer.from_pretrained("unsloth/Llama-3.2-1B")
+    model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
+    # ==================
+
+    # if args.quantized:
+    #     tokenizer, model = load_quantized_model(model_name=model_name, hf_token=HF_TOKEN)
+    # else:
+    #     tokenizer = AutoTokenizer.from_pretrained(model_name, token=HF_TOKEN)
+    #     model = AutoModelForCausalLM.from_pretrained(
+    #         model_name,
+    #         torch_dtype=torch.float16,
+    #         device_map="auto",
+    #         token=HF_TOKEN,
+    #     )
 
     def unique_path(path, i=0):
         if os.path.exists(path):
