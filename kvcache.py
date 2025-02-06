@@ -46,7 +46,7 @@ def generate(
 
     # print("input_ids: ", input_ids) # debugging
     origin_ids = input_ids
-    input_ids = input_ids #.to(embed_device)
+    input_ids = input_ids.to(embed_device)
 
     output_ids = input_ids.clone()
     next_token = input_ids
@@ -64,7 +64,7 @@ def generate(
             next_token_logits = outputs.logits[:, -1, :]
             print("next_token_logits: ", next_token_logits) # debugging
             next_token = next_token_logits.argmax(dim=-1).unsqueeze(-1)
-            next_token = next_token #.to(embed_device)
+            next_token = next_token.to(embed_device)
 
             print("debugging next_token: ", type(next_token))
             print("print(next_token): ", print(next_token))
@@ -100,7 +100,7 @@ def preprocess_knowledge(
         DynamicCache: KV Cache
     """
     embed_device = model.model.embed_tokens.weight.device
-    input_ids = tokenizer.encode(prompt, return_tensors="pt") #.to(embed_device)
+    input_ids = tokenizer.encode(prompt, return_tensors="pt").to(embed_device)
     past_key_values = DynamicCache()
     with torch.no_grad():
         outputs = model(
@@ -351,7 +351,7 @@ def kvcache_test(args: argparse.Namespace):
     <|start_header_id|>assistant<|end_header_id|>
     """
             generate_t1 = time()
-            input_ids = tokenizer.encode(prompt, return_tensors="pt") #.to(model.device)
+            input_ids = tokenizer.encode(prompt, return_tensors="pt").to(model.device)
             output = generate(model, input_ids, DynamicCache()) 
             generated_text = tokenizer.decode(output[0], skip_special_tokens=True, temperature=None)
             generate_t2 = time()
@@ -362,7 +362,7 @@ def kvcache_test(args: argparse.Namespace):
     """
             generate_t1 = time()
             clean_up(knowledge_cache, kv_len)
-            input_ids = tokenizer.encode(prompt, return_tensors="pt") #.to(model.device)
+            input_ids = tokenizer.encode(prompt, return_tensors="pt").to(model.device)
             output = generate(model, input_ids, knowledge_cache)
             generated_text = tokenizer.decode(output[0], skip_special_tokens=True, temperature=None)
             generate_t2 = time()
