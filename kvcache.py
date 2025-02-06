@@ -60,14 +60,14 @@ def generate(
                 past_key_values=past_key_values,
                 use_cache=True
             )
-            print("outputs after model: ", outputs) # debugging
+            # print("outputs after model: ", outputs) # debugging
             next_token_logits = outputs.logits[:, -1, :]
-            print("next_token_logits: ", next_token_logits) # debugging
+            # print("next_token_logits: ", next_token_logits) # debugging
             next_token = next_token_logits.argmax(dim=-1).unsqueeze(-1)
             next_token = next_token.to(embed_device)
 
-            print("debugging next_token: ", type(next_token))
-            print("print(next_token): ", print(next_token))
+            # print("debugging next_token: ", type(next_token))
+            # print("print(next_token): ", print(next_token))
 
             past_key_values = outputs.past_key_values
 
